@@ -4,24 +4,29 @@ import Player as p
 player = None
 ai = None
 startingDice = 0
-previousBet = []
+previousBet = [0, 0]
 
-def main(dice):
+def main():
     global player
     global ai
     global startingDice
 
-    startingDice = dice
-    player = p.Player(1, dice)
-    ai = p.Player(2, dice)
-
     while True:
-        result = decideFirstPlayer()
+        startingDice = int(input("How many dice to start with? "))
+        player = p.Player(1, startingDice)
+        ai = p.Player(2, startingDice)
 
-        if result != False:
+        while True:
+            result = decideFirstPlayer()
+
+            if result != False:
+                break
+        
+        turnHandler(result)
+
+        answer = input("Play another game? y/n ")
+        if answer.lower() == "n":
             break
-    
-    turnHandler(result)
 
 def decideFirstPlayer():
     global player
@@ -109,7 +114,7 @@ def call(callingPlayer):
     global ai
     global previousBet
 
-    if previousBet == []:
+    if previousBet == [0, 0]:
         print("A bet must be placed first before you can call")
         return callingPlayer
 
