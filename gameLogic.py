@@ -13,8 +13,8 @@ def main():
 
     while True:
         startingDice = int(input("How many dice to start with? "))
-        player = p.Player(1, startingDice)
-        ai = p.Player(2, startingDice)
+        player = p.Player("Player", startingDice)
+        ai = p.Player("AI", startingDice)
 
         while True:
             result = decideFirstPlayer()
@@ -96,7 +96,7 @@ def nextBet(better):
             continue
 
         # Is bet bigger than previous?
-        if (formatedBet[1] >= previousBet[1] or (formatedBet[0] > previousBet[0] and formatedBet[0] == previousBet[1])) and formatedBet != previousBet:
+        if (formatedBet[0] > previousBet[0] or (formatedBet[1] > previousBet[1] and formatedBet[0] == previousBet[0])) and formatedBet != previousBet:
             previousBet = formatedBet
             break
         else:
@@ -124,19 +124,21 @@ def call(callingPlayer):
         otherPlayer = player
 
     # Combines dice pools and counts total of each number
-    allDice = player.dice + ai.dice
-    diceTotals = {1:0, 2:0, 3:0, 4:0}
+    allDice = player.showDice() + ai.showDice()
+    diceTotal = {1:0, 2:0, 3:0, 4:0}
     for die in allDice:
-        diceTotals[die] += 1
+        diceTotal[die] += 1
 
     # Resets both players dice, as results have now been stored
     resetDice()
 
     # Checks if bet is true or not
-    if diceTotals[previousBet[1]] >= previousBet[0]:
+    if allDice[previousBet[1]] >= previousBet[0]:
+        print(f"{callingPlayer.id} wins the call")
         otherPlayer.removeDice()
         return otherPlayer
     else:
+        print(f"{callingPlayer.id} loses the call")
         callingPlayer.removeDice()
         return callingPlayer
     
